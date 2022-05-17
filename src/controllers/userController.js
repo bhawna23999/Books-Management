@@ -7,6 +7,8 @@ const isValid = function(value)
     return false
     if(typeof value === 'string' && value.trim().length === 0)
     return false
+    if(typeof value === 'number' && value.toString().trim().length === 0)
+    return false
     return true
 }
 
@@ -43,6 +45,8 @@ const register = async function(req,res)
         if(!isValid(phone))
         return res.status(400).send({status:false, msg:"Phone No is Required"})
         //check for Phone no is valid or not
+        if(!(!isNaN(Number(phone))))
+        return res.status(400).send({status:false, message:"Please enter only Natural no's"})
         if(!(/^[6-9]\d{9}$/.test(phone)))
         return res.status(400).send({status:false, msg:"This Number is not valid"})
         // check for unique phone no
@@ -63,7 +67,7 @@ const register = async function(req,res)
         if(!isValid(password))
         return res.status(400).send({status:false, msg:"Password is Required"})
         //check for password length
-        if(!(password.length >= 8) || !(password.length <= 15))
+        if(!(password.split("").length >= 8) || !(password.split("").length <= 15))
         return res.status(400).send({status:false, msg:"Password should have length in range 8 to 15"})
 
         // Validation Ends

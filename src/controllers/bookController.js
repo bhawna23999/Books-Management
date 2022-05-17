@@ -6,6 +6,7 @@ const reviewModel = require("../models/reviewModel")
 const isValid = function(value){
     if(typeof value === 'undefined' || value === null) return false
     if(typeof value === 'string' && value.trim().length=== 0) return false 
+    if(typeof value === 'number' && value.toString().trim().length === 0 ) return false 
     return true
 }
 
@@ -100,7 +101,7 @@ const getBooks = async function(req,res)
                 if(!isValidObjectId(userId)){
                     return res.status(400).send({status:false, msg:`this ${userId} user Id is not a valid Id`})
                 }
-                filterQuery['userId'] = userId               
+                filterQuery['userId'] = userId.trim()              
             }
 
             if(isValid(category)){
@@ -112,7 +113,7 @@ const getBooks = async function(req,res)
             }
         }
 
-        const books = await bookModel.find(filterQuery,{ title: 1, excerpt: 1, userId: 1, category: 1, reviews: 1, releasedAt: 1 }).collation({locale : "en"}).sort({ title: 1 })
+        const books = await bookModel.find(filterQuery).select("title excerpt userId category reviews releasedAt").collation({locale : "en"}).sort({ title: 1 })
 
         if(!isValidRequestBody(books))
         return res.status(404).send({status:false, msg:"No book found"})

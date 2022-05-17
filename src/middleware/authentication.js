@@ -63,8 +63,10 @@ const authorization = async function(req,res,next){
         let book = await bookModel.findById(paramId)
 
         //Autherozation
-        if(tokenuserId != book.userId)
+        if(tokenuserId !== book.userId.toString())
         return res.status(400).send({status:false, message:"This userId of book is not matched with token user Id"})
+        // console.log(tokenuserId)
+        // console.log(book.userId.toString())
 
         if(!book || book.isDeleted)
         return res.status(404).send({status:false, message:"Book does not exist"})
